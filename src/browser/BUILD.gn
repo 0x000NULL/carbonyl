@@ -46,12 +46,20 @@ config("lib") {
 
   if (is_mac) {
     target += "apple-darwin"
+    libs = [ "carbonyl" ]
   } else if (is_linux) {
     target += "unknown-linux-gnu"
+    libs = [ "carbonyl" ]
+  } else if (is_win) {
+    target += "pc-windows-msvc"
+
+    # rustc emits carbonyl.dll + carbonyl.dll.lib as the MSVC import library;
+    # `libs = ["carbonyl.dll"]` makes link.exe append `.lib` and resolve to
+    # carbonyl.dll.lib. `libs = ["carbonyl"]` would look for carbonyl.lib.
+    libs = [ "carbonyl.dll" ]
   }
 
-  libs = ["carbonyl"]
-  lib_dirs = ["//carbonyl/build/$target/release"]
+  lib_dirs = [ "//carbonyl/build/$target/release" ]
 }
 
 component("renderer") {

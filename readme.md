@@ -110,7 +110,7 @@ As far as tested, the operating systems under are supported:
 
 - Linux (Debian, Ubuntu and Arch tested)
 - MacOS
-- Windows 11 and WSL
+- Windows 10 1809+ and Windows 11 (native or WSL). Native Windows requires VT-processing console support (`ENABLE_VIRTUAL_TERMINAL_PROCESSING`), which is stable from Windows 10 1809 onward.
 
 ## Contributing
 
@@ -132,8 +132,18 @@ Few notes:
 
 - Building the runtime is almost the same as building Chromium with extra steps to patch and bundle the Rust library. Scripts in the `scripts/` directory are simple wrappers around `gn`, `ninja`, etc..
 - Building Chromium for arm64 on Linux requires an amd64 processor
-- Carbonyl is only tested on Linux and macOS, other platforms likely require code changes to Chromium
+- Carbonyl is primarily tested on Linux and macOS. Native Windows is supported (see [Windows prerequisites](#windows-prerequisites)); other platforms likely require code changes to Chromium.
 - Chromium is huge and takes a long time to build, making your computer mostly unresponsive. An 8-core CPU such as an M1 Max or an i9 9900k with 10 Gbps fiber takes around ~1 hour to fetch and build. It requires around 100 GB of disk space.
+
+#### Windows prerequisites
+
+Native Windows runtime builds need:
+
+- Visual Studio 2022 with the **Desktop development with C++** workload and the latest Windows 11 SDK.
+- Python 3 and Git in `PATH` (standard Git for Windows installs suffice).
+- Run the scripts from a Git Bash (MSYS) shell — they're bash, not PowerShell.
+- Non-Googlers must export `DEPOT_TOOLS_WIN_TOOLCHAIN=0` before `gclient sync` so depot_tools uses the host Visual Studio install instead of trying to fetch Google's internal toolchain.
+- A full Chromium fetch plus build is multi-hour on Windows too — plan accordingly.
 
 #### Fetch
 
@@ -190,13 +200,14 @@ is_official_build = true
 $ ./scripts/build.sh Default
 ```
 
-This should produce the following outputs:
+This should produce the following outputs (file extensions depend on the host OS — `.so` on Linux, `.dylib` on macOS, `.dll` on Windows; `headless_shell` is `headless_shell.exe` on Windows):
 
 - `out/Default/headless_shell`: browser binary
 - `out/Default/icudtl.dat`
 - `out/Default/libEGL.so`
 - `out/Default/libGLESv2.so`
 - `out/Default/v8_context_snapshot.bin`
+- `out/Default/carbonyl.dll` + `out/Default/carbonyl.dll.lib` (Windows only — the Rust cdylib and its MSVC import library)
 
 #### Build Docker image
 
