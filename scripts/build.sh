@@ -26,13 +26,17 @@ if [ -z "$CARBONYL_SKIP_CARGO_BUILD" ]; then
     cargo build --target "$triple" --release
 fi
 
-if [ -f "build/$triple/release/libcarbonyl.dylib" ]; then
-    cp "build/$triple/release/libcarbonyl.dylib" "$CHROMIUM_SRC/out/$target"
+out="build/$triple/release"
+if [ -f "$out/carbonyl.dll" ]; then
+    # MSVC linker needs both the DLL and its import library.
+    cp "$out/carbonyl.dll" "$out/carbonyl.dll.lib" "$CHROMIUM_SRC/out/$target"
+elif [ -f "$out/libcarbonyl.dylib" ]; then
+    cp "$out/libcarbonyl.dylib" "$CHROMIUM_SRC/out/$target"
     install_name_tool \
         -id @executable_path/libcarbonyl.dylib \
-        "build/$triple/release/libcarbonyl.dylib"
+        "$out/libcarbonyl.dylib"
 else
-    cp "build/$triple/release/libcarbonyl.so" "$CHROMIUM_SRC/out/$target"
+    cp "$out/libcarbonyl.so" "$CHROMIUM_SRC/out/$target"
 fi
 
 cd "$CHROMIUM_SRC/out/$target"
