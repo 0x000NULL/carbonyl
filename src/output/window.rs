@@ -1,4 +1,3 @@
-use core::mem::MaybeUninit;
 use std::str::FromStr;
 
 use crate::{cli::CommandLine, gfx::Size, utils::log};
@@ -35,20 +34,7 @@ impl Window {
     }
 
     pub fn update(&mut self) -> &Self {
-        let (mut term, mut cell) = unsafe {
-            let mut ptr = MaybeUninit::<libc::winsize>::uninit();
-
-            if libc::ioctl(libc::STDOUT_FILENO, libc::TIOCGWINSZ, ptr.as_mut_ptr()) == 0 {
-                let size = ptr.assume_init();
-
-                (
-                    Size::new(size.ws_col, size.ws_row),
-                    Size::new(size.ws_xpixel, size.ws_ypixel),
-                )
-            } else {
-                (Size::splat(0), Size::splat(0))
-            }
-        };
+        let (mut term, mut cell) = read_term_size();
 
         if cell.width == 0 || cell.height == 0 {
             cell.width = 8;
@@ -102,4 +88,51 @@ impl Window {
 
 fn parse_var<T: FromStr>(var: &str) -> Option<T> {
     std::env::var(var).ok()?.parse().ok()
+}
+
+#[cfg(unix)]
+fn read_term_size() -> (Size<u16>, Size<u16>) {
+    use core::mem::MaybeUninit;
+
+    unsafe {
+        let mut ptr = MaybeUninit::<libc::winsize>::uninit();
+
+        if libc::ioctl(libc::STDOUT_FILENO, libc::TIOCGWINSZ, ptr.as_mut_ptr()) == 0 {
+            let size = ptr.assume_init();
+
+            (
+                Size::new(size.ws_col, size.ws_row),
+                Size::new(size.ws_xpixel, size.ws_ypixel),
+            )
+        } else {
+            (Size::splat(0), Size::splat(0))
+        }
+    }
+}
+
+#[cfg(windows)]
+fn read_term_size() -> (Size<u16>, Size<u16>) {
+    use windows_sys::Win32::Foundation::INVALID_HANDLE_VALUE;
+    use windows_sys::Win32::System::Console::{
+        GetConsoleScreenBufferInfo, GetStdHandle, CONSOLE_SCREEN_BUFFER_INFO, STD_OUTPUT_HANDLE,
+    };
+
+    unsafe {
+        let handle = GetStdHandle(STD_OUTPUT_HANDLE);
+        if handle.is_null() || handle == INVALID_HANDLE_VALUE {
+            return (Size::splat(0), Size::splat(0));
+        }
+
+        let mut info: CONSOLE_SCREEN_BUFFER_INFO = core::mem::zeroed();
+        if GetConsoleScreenBufferInfo(handle, &mut info) != 0 {
+            let width = (info.srWindow.Right - info.srWindow.Left + 1).max(0) as u16;
+            let height = (info.srWindow.Bottom - info.srWindow.Top + 1).max(0) as u16;
+
+            // Windows Console doesn't report pixel size; fall through to the
+            // caller's 8x16 default for cell-pixel dimensions.
+            (Size::new(width, height), Size::new(0u16, 0u16))
+        } else {
+            (Size::splat(0), Size::splat(0))
+        }
+    }
 }

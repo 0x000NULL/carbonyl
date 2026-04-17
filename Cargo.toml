@@ -4,10 +4,16 @@ version = "0.0.3"
 edition = "2021"
 
 [dependencies]
-libc = "0.2"
-unicode-width = "0.1.10"
-unicode-segmentation = "1.10.0"
-chrono = "0.4.23"
+libc = "0.2.160"
+unicode-width = "0.1.13"
+unicode-segmentation = "1.12"
+chrono = "0.4.40"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = [
+    "Win32_Foundation",
+    "Win32_System_Console",
+] }
 
 [lib]
 name = "carbonyl"
