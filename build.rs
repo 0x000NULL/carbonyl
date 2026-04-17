@@ -1,6 +1,7 @@
+#[cfg(target_os = "linux")]
 use std::path::PathBuf;
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
 fn link_sysroot() {
     let sysroot_path = PathBuf::from("./chromium/src/build/linux/debian_bullseye_amd64-sysroot");
 
@@ -17,7 +18,7 @@ fn link_sysroot() {
     }
 }
 
-#[cfg(target_arch = "x86")]
+#[cfg(all(target_os = "linux", target_arch = "x86"))]
 fn link_sysroot() {
     let sysroot_path = PathBuf::from("./chromium/src/build/linux/debian_bullseye_i386-sysroot");
 
@@ -34,9 +35,10 @@ fn link_sysroot() {
     }
 }
 
-#[cfg(not(any(target_arch = "x86_64", target_arch = "x86")))]
+#[cfg(not(all(target_os = "linux", any(target_arch = "x86_64", target_arch = "x86"))))]
 fn link_sysroot() {
-    // Intentionally left blank.
+    // Intentionally left blank. Sysroot linking is a Linux-only concern tied to
+    // the Debian sysroot shipped under chromium/src/build/linux/.
 }
 
 fn main() {
