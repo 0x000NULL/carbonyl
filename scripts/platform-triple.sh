@@ -12,6 +12,8 @@ if [ -z "$platform" ]; then
         platform="linux"
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         platform="macos"
+    elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
+        platform="windows"
     else
         echo "Unsupported platform: $OSTYPE"
 
@@ -23,6 +25,8 @@ if [ "$platform" == "linux" ]; then
     platform="unknown-linux-gnu"
 elif  [ "$platform" == "macos" ]; then
     platform="apple-darwin"
+elif [ "$platform" == "windows" ]; then
+    platform="pc-windows-msvc"
 fi
 
 if [ -z "$cpu" ]; then

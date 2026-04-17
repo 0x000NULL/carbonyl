@@ -7,4 +7,7 @@ source "$CARBONYL_ROOT/scripts/env.sh"
 target="$1"
 shift
 
-"$CHROMIUM_SRC/out/$target/headless_shell" "$@"
+bin="$CHROMIUM_SRC/out/$target/headless_shell"
+[ -f "$bin.exe" ] && bin="$bin.exe"
+
+"$bin" "$@"
