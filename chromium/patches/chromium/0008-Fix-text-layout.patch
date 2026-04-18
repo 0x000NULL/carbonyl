@@ -1,4 +1,4 @@
-From 7b1f72900f704ffecc48c66da7ccd6de205b88f7 Mon Sep 17 00:00:00 2001
+From 6c2b39c41bc93bf0a7ba294dd33ec4cec4e552e6 Mon Sep 17 00:00:00 2001
 From: Fathy Boundjadj <hey@fathy.fr>
 Date: Thu, 9 Feb 2023 03:32:14 +0100
 Subject: [PATCH 08/14] Fix text layout

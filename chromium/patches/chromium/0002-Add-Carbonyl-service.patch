@@ -1,4 +1,4 @@
-From 795b29828fd7ac95548c4dcab483cbc3b6c1d361 Mon Sep 17 00:00:00 2001
+From 2cb351e6c85fd97e6fa835e702018883231276b1 Mon Sep 17 00:00:00 2001
 From: Fathy Boundjadj <hey@fathy.fr>
 Date: Thu, 9 Feb 2023 03:21:59 +0100
 Subject: [PATCH 02/14] Add Carbonyl service
@@ -145,7 +145,7 @@ index db16f07685acf..8c36cce0ec604 100644
    // RenderFrameHostImpl exposes document-scoped Mojo services to the currently
    // active document in the corresponding RenderFrame.
 diff --git a/content/renderer/render_frame_impl.cc b/content/renderer/render_frame_impl.cc
-index 9e09c5342699e..97b61ffb954be 100644
+index 9e09c5342699e..8de02feba7ba8 100644
 --- a/content/renderer/render_frame_impl.cc
 +++ b/content/renderer/render_frame_impl.cc
 @@ -232,6 +232,7 @@

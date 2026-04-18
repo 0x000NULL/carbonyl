@@ -1,4 +1,4 @@
-From bdc80f35a7113b7523c4d992edc9170db082deb0 Mon Sep 17 00:00:00 2001
+From 7b3256293a2e16d22c36f35fdb82cb0b8c092be4 Mon Sep 17 00:00:00 2001
 From: Fathy Boundjadj <hey@fathy.fr>
 Date: Sun, 12 Feb 2023 00:55:33 +0100
 Subject: [PATCH 10/14] Conditionally enable text rendering
@@ -11,7 +11,7 @@ Subject: [PATCH 10/14] Conditionally enable text rendering
  4 files changed, 23 insertions(+), 17 deletions(-)
 
 diff --git a/content/renderer/render_frame_impl.cc b/content/renderer/render_frame_impl.cc
-index 97b61ffb954be..891efd6a9d796 100644
+index 8de02feba7ba8..c0ff54a690623 100644
 --- a/content/renderer/render_frame_impl.cc
 +++ b/content/renderer/render_frame_impl.cc
 @@ -259,6 +259,7 @@

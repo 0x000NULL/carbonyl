@@ -1,4 +1,4 @@
-From 3b67b346ec26a47b50178124d715a8320f612d4d Mon Sep 17 00:00:00 2001
+From b2d15974c1abc1d1b07a9d123d85dae84514b51a Mon Sep 17 00:00:00 2001
 From: Fathy Boundjadj <hey@fathy.fr>
 Date: Mon, 13 Feb 2023 16:28:50 +0100
 Subject: [PATCH 13/14] Refactor rendering bridge
@@ -411,7 +411,7 @@ index 2a2410d4a46c1..1900c294f2f65 100644
      "//cc/animation",
      "//cc/mojo_embedder",
 diff --git a/content/renderer/render_frame_impl.cc b/content/renderer/render_frame_impl.cc
-index 891efd6a9d796..379cf6c58b2b0 100644
+index c0ff54a690623..df85ced5b4250 100644
 --- a/content/renderer/render_frame_impl.cc
 +++ b/content/renderer/render_frame_impl.cc
 @@ -285,6 +285,7 @@

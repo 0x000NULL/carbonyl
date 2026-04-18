@@ -276,6 +276,36 @@ try {
         Invoke-Bash "./scripts/patches.sh apply" "patches.sh apply"
     }
 
+    # ---- Stage 3b: fix symlinks (junctions) ---------------------------------
+    # Git stores symlinks as text files on Windows. patches.sh apply checks out
+    # the pinned upstream SHA, which restores the text symlink files and destroys
+    # any existing NTFS junctions (and their target contents). We must re-create
+    # the junctions after every patch apply so that GN can resolve
+    # //carbonyl/src and //carbonyl/build.
+    $carbonylInChromium = Join-Path $carbonylRoot 'chromium\src\carbonyl'
+    $junctions = @{
+        (Join-Path $carbonylInChromium 'src')   = (Join-Path $carbonylRoot 'src')
+        (Join-Path $carbonylInChromium 'build') = (Join-Path $carbonylRoot 'build')
+    }
+    foreach ($link in $junctions.Keys) {
+        $target = $junctions[$link]
+        # Remove the text symlink file (or stale junction) if present
+        if (Test-Path $link) {
+            $item = Get-Item $link -Force
+            if ($item.PSIsContainer) {
+                # Existing junction — remove mount point only (not contents)
+                cmd /c "rmdir `"$link`"" 2>$null
+            } else {
+                Remove-Item $link -Force
+            }
+        }
+        cmd /c "mklink /J `"$link`" `"$target`""
+        if (-not (Test-Path $link)) {
+            throw "Failed to create junction: $link -> $target"
+        }
+        Write-Host "  [OK] junction $link -> $target" -ForegroundColor Green
+    }
+
     # ---- Stage 4: configure (write args.gn + gn gen) ----------------------
     Write-Stage "Stage 4: configure (gn gen)"
     $chromiumSrc = Join-Path $carbonylRoot 'chromium\src'
@@ -300,6 +330,7 @@ is_official_build = true
 # Chromium's bundled ffmpeg uses ATOMIC_VAR_INIT (removed in C23).
 # This flag adds a compat header that provides the macro.
 ffmpeg_use_unsafe_atomics = true
+
 '@
     Set-Content -Path (Join-Path $outDir 'args.gn') -Value $argsGnBody -Encoding ASCII
     Write-Host "  Wrote $outDir\args.gn"

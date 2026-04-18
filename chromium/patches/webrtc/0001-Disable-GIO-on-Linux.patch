@@ -1,4 +1,4 @@
-From 5ad57c96f23739717bcea018baf2bc8f4157b01d Mon Sep 17 00:00:00 2001
+From a0eca9e75d3c1f81ca5d7de6a1ca28d00d100960 Mon Sep 17 00:00:00 2001
 From: Fathy Boundjadj <hey@fathy.fr>
 Date: Mon, 13 Feb 2023 16:37:40 +0100
 Subject: [PATCH] Disable GIO on Linux
