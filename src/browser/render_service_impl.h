@@ -17,7 +17,7 @@ class CARBONYL_RENDERER_EXPORT CarbonylRenderServiceImpl: public mojom::Carbonyl
   ~CarbonylRenderServiceImpl() override;
 
   // carbonyl::mojom::CarbonylRenderService:
-  void DrawText(std::vector<mojom::TextDataPtr> data) override;
+  void PushTextData(std::vector<mojom::TextDataPtr> data) override;
 
  private:
   mojo::Receiver<mojom::CarbonylRenderService> receiver_;

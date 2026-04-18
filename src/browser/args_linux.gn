@@ -1,0 +1,32 @@
+# Linux / Ozone-specific args. Import this from out/<dir>/args.gn on Linux:
+#   import("//carbonyl/src/browser/args_linux.gn")
+
+ozone_platform = "headless"
+ozone_platform_x11 = false
+
+use_qt = false
+use_gio = false
+use_gtk = false
+use_cups = false
+use_dbus = false
+use_glib = false
+use_libpci = false
+use_kerberos = false
+use_vaapi_x11 = false
+use_xkbcommon = false
+
+angle_use_x11 = false
+angle_use_wayland = false
+
+rtc_use_x11 = false
+rtc_use_pipewire = false
+rtc_use_x11_extensions = false
+
+# These can be disabled on Linux but not Windows, where the dependency chain
+# is: printing → PDF → plugins (all unconditionally required).
+enable_pdf = false
+enable_ppapi = false
+enable_plugins = false
+enable_printing = false
+enable_tagged_pdf = false
+enable_print_content_analysis = false

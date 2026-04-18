@@ -200,6 +200,22 @@ try {
     $env:DEPOT_TOOLS_WIN_TOOLCHAIN = '0'
     Write-Host "  [OK] DEPOT_TOOLS_WIN_TOOLCHAIN=0" -ForegroundColor Green
 
+    # Point Chromium's toolchain setup at the installed Windows SDK version
+    # (the default in setup_toolchain.py is 10.0.20348.0 which may not be present).
+    if (-not $env:WINDOWS_SDK_VERSION) {
+        $sdkInclude = "${env:ProgramFiles(x86)}\Windows Kits\10\Include"
+        $sdkVer = Get-ChildItem $sdkInclude -Directory -ErrorAction SilentlyContinue |
+                  Where-Object { $_.Name -match '^\d+\.' } |
+                  Sort-Object Name -Descending |
+                  Select-Object -First 1
+        if ($sdkVer) {
+            $env:WINDOWS_SDK_VERSION = $sdkVer.Name
+            Write-Host "  [OK] WINDOWS_SDK_VERSION=$($sdkVer.Name)" -ForegroundColor Green
+        }
+    } else {
+        Write-Host "  [OK] WINDOWS_SDK_VERSION=$env:WINDOWS_SDK_VERSION" -ForegroundColor Green
+    }
+
     # Shell script line endings. Git for Windows defaults to core.autocrlf=true
     # which converts *.sh to CRLF on checkout; that breaks `#!/usr/bin/env bash`
     # under msys because env looks for a program named literally `bash\r`.
@@ -277,10 +293,13 @@ target_cpu = "x64"
 # MSVC / Windows knobs
 use_lld = true
 symbol_level = 1
-is_win_fastlink = false
 
 is_debug = false
 is_official_build = true
+
+# Chromium's bundled ffmpeg uses ATOMIC_VAR_INIT (removed in C23).
+# This flag adds a compat header that provides the macro.
+ffmpeg_use_unsafe_atomics = true
 '@
     Set-Content -Path (Join-Path $outDir 'args.gn') -Value $argsGnBody -Encoding ASCII
     Write-Host "  Wrote $outDir\args.gn"

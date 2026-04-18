@@ -463,7 +463,7 @@ index 9e09c5342699e..97b61ffb954be 100644
 +      );
 +
 +      renderer->Swap(data);
-+      carbonyl_render_service_->DrawText(std::move(data));
++      carbonyl_render_service_->PushTextData(std::move(data));
 +
 +      return true;
 +    }

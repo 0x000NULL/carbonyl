@@ -13,7 +13,7 @@ CarbonylRenderServiceImpl::CarbonylRenderServiceImpl(
 
 CarbonylRenderServiceImpl::~CarbonylRenderServiceImpl() = default;
 
-void CarbonylRenderServiceImpl::DrawText(std::vector<mojom::TextDataPtr> data) {
+void CarbonylRenderServiceImpl::PushTextData(std::vector<mojom::TextDataPtr> data) {
     std::vector<Text> mapped;
 
     for (auto& text: data) {

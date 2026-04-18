@@ -18,5 +18,5 @@ struct TextData {
 // The browser process runs this service
 interface CarbonylRenderService {
     // The renderer process calls this method
-    DrawText(array<TextData> data);
+    PushTextData(array<TextData> data);
 };

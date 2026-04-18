@@ -7,51 +7,14 @@ proprietary_codecs = true
 
 use_static_angle = true
 
-# Linux / Ozone-specific dependencies. These GN args aren't declared on
-# Windows or macOS and would cause `gn gen` to error, so gate them.
-if (is_linux) {
-  ozone_platform = "headless"
-  ozone_platform_x11 = false
-
-  use_qt = false
-  use_gio = false
-  use_gtk = false
-  use_cups = false
-  use_dbus = false
-  use_glib = false
-  use_libpci = false
-  use_kerberos = false
-  use_vaapi_x11 = false
-  use_xkbcommon = false
-
-  angle_use_x11 = false
-  angle_use_wayland = false
-
-  rtc_use_x11 = false
-  rtc_use_pipewire = false
-  rtc_use_x11_extensions = false
-
-  # Linux only (kept commented for reference)
-  # use_wayland_gbm = false
-  # use_system_libdrm = false
-  # use_system_minigbm = false
-}
-
-# Windows notes (kept as comments; set explicitly in `gn args out/<target>`
-# if the defaults don't suit):
-#   use_lld = true
-#   symbol_level = 1       # manageable .pdb size
-#   is_win_fastlink = false
+# Platform-specific args are in separate files:
+#   args_linux.gn  — Linux / Ozone-specific (import from out/<dir>/args.gn)
+# Windows-specific args (use_lld, symbol_level, etc.) go directly in
+# out/<dir>/args.gn.
 
 # Disable unused features
-enable_pdf = false
 enable_nacl = false
-enable_ppapi = false
-enable_printing = false
-enable_print_content_analysis = false
-enable_plugins = false
 enable_rust_json = false
-enable_tagged_pdf = false
 enable_media_remoting = false
 enable_speech_service = false
 enable_component_updater = false

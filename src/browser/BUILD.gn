@@ -53,10 +53,9 @@ config("lib") {
   } else if (is_win) {
     target += "pc-windows-msvc"
 
-    # rustc emits carbonyl.dll + carbonyl.dll.lib as the MSVC import library;
-    # `libs = ["carbonyl.dll"]` makes link.exe append `.lib` and resolve to
-    # carbonyl.dll.lib. `libs = ["carbonyl"]` would look for carbonyl.lib.
-    libs = [ "carbonyl.dll" ]
+    # rustc emits carbonyl.dll + carbonyl.dll.lib as the MSVC import library.
+    # lld-link resolves this to carbonyl.dll.lib in the lib_dirs path.
+    libs = [ "carbonyl.dll.lib" ]
   }
 
   lib_dirs = [ "//carbonyl/build/$target/release" ]
