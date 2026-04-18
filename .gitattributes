@@ -1,0 +1,26 @@
+# Shell scripts must keep LF line endings so `#!/usr/bin/env bash` is
+# interpreted correctly by env(1) on msys/cygwin/Git Bash. Git for Windows
+# defaults to core.autocrlf=true, which would otherwise convert them to
+# CRLF and make env look for a program literally named `bash\r`.
+*.sh text eol=lf
+
+# Keep other text build inputs consistent; harmless on POSIX, prevents
+# surprises when a Windows contributor edits them.
+*.gn text eol=lf
+*.gni text eol=lf
+*.mjs text eol=lf
+*.toml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Binary artifacts -- never touch
+*.dll binary
+*.exe binary
+*.lib binary
+*.pdb binary
+*.so binary
+*.dylib binary
+*.bin binary
+*.png binary
+*.jpg binary
+*.ico binary

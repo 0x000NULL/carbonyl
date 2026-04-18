@@ -5,34 +5,43 @@ headless_use_embedded_resources = true
 ffmpeg_branding = "Chrome"
 proprietary_codecs = true
 
-# Disable unused dependencies
-ozone_platform = "headless"
-ozone_platform_x11 = false
-
 use_static_angle = true
 
-use_qt = false
-use_gio = false
-use_gtk = false
-use_cups = false
-use_dbus = false
-use_glib = false
-use_libpci = false
-use_kerberos = false
-use_vaapi_x11 = false
-use_xkbcommon = false
+# Linux / Ozone-specific dependencies. These GN args aren't declared on
+# Windows or macOS and would cause `gn gen` to error, so gate them.
+if (is_linux) {
+  ozone_platform = "headless"
+  ozone_platform_x11 = false
 
-angle_use_x11 = false
-angle_use_wayland = false
+  use_qt = false
+  use_gio = false
+  use_gtk = false
+  use_cups = false
+  use_dbus = false
+  use_glib = false
+  use_libpci = false
+  use_kerberos = false
+  use_vaapi_x11 = false
+  use_xkbcommon = false
 
-rtc_use_x11 = false
-rtc_use_pipewire = false
-rtc_use_x11_extensions = false
+  angle_use_x11 = false
+  angle_use_wayland = false
 
-# Linux only
-# use_wayland_gbm = false
-# use_system_libdrm = false
-# use_system_minigbm = false
+  rtc_use_x11 = false
+  rtc_use_pipewire = false
+  rtc_use_x11_extensions = false
+
+  # Linux only (kept commented for reference)
+  # use_wayland_gbm = false
+  # use_system_libdrm = false
+  # use_system_minigbm = false
+}
+
+# Windows notes (kept as comments; set explicitly in `gn args out/<target>`
+# if the defaults don't suit):
+#   use_lld = true
+#   symbol_level = 1       # manageable .pdb size
+#   is_win_fastlink = false
 
 # Disable unused features
 enable_pdf = false

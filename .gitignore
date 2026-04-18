@@ -10,3 +10,6 @@ node_modules/
 !/chromium/depot_tools
 !/chromium/patches
 /packages/*/build
+
+# Transcript log from validate-m4.ps1
+/build-m4.log
